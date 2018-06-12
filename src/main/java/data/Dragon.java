@@ -1,18 +1,15 @@
 package data;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dragon {
     private int gameId;
-    private Map<String, Integer> sortedStats = new HashMap<String, Integer>();
+    private Map<String, Integer> sortedStats;
 
     public Dragon(int scaleThickness, int clawSharpness, int wingStrength, int fireBreath, int gameId) {
         this.gameId = gameId;
-        Map<String, Integer> stats = new HashMap<String, Integer>();
+        Map<String, Integer> stats = new HashMap<>();
         stats.put("scaleThickness", scaleThickness);
         stats.put("clawSharpness", clawSharpness);
         stats.put("wingStrength", wingStrength);
@@ -22,4 +19,21 @@ public class Dragon {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
+
+    public int getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(int gameId) {
+        this.gameId = gameId;
+    }
+
+    public Map<String, Integer> getSortedStats() {
+        return sortedStats;
+    }
+
+    public void setSortedStats(Map<String, Integer> sortedStats) {
+        this.sortedStats = sortedStats;
+    }
+
 }

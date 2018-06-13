@@ -4,11 +4,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dragon {
-    private int gameId;
     private Map<String, Integer> sortedStats;
 
-    public Dragon(int scaleThickness, int clawSharpness, int wingStrength, int fireBreath, int gameId) {
-        this.gameId = gameId;
+    public Dragon(int scaleThickness, int clawSharpness, int wingStrength, int fireBreath) {
         Map<String, Integer> stats = new HashMap<>();
         stats.put("scaleThickness", scaleThickness);
         stats.put("clawSharpness", clawSharpness);
@@ -20,14 +18,6 @@ public class Dragon {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
-    public int getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(int gameId) {
-        this.gameId = gameId;
-    }
-
     public Map<String, Integer> getSortedStats() {
         return sortedStats;
     }
@@ -36,4 +26,13 @@ public class Dragon {
         this.sortedStats = sortedStats;
     }
 
+    @Override
+    public String toString() {
+        return "{\"dragon\":{" +
+                "\"scaleThickness\":" + sortedStats.get("scaleThickness") +
+                ",\"clawSharpness\":" + sortedStats.get("clawSharpness") +
+                ",\"wingStrength\":" + sortedStats.get("wingStrength") +
+                ",\"fireBreath\":" + sortedStats.get("fireBreath") + "}" +
+                '}';
+    }
 }

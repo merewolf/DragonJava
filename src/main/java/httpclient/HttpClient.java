@@ -1,44 +1,51 @@
 package httpclient;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import data.Dragon;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import okhttp3.*;
 
 import java.io.IOException;
 
 public class HttpClient {
+    private int gameId;
+    private OkHttpClient client = new OkHttpClient();
 
-    public static Dragon getDragon() {
-        Gson gson = new Gson();
+    public Dragon getDragon() throws IOException {
         JsonParser parser = new JsonParser();
-        JsonObject game = new JsonObject();
-        JsonObject knightStats = new JsonObject();
+        JsonObject game;
+        JsonObject knightStats;
 
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://www.dragonsofmugloar.com/api/game");
-        try {
-            CloseableHttpResponse response = httpclient.execute(httpGet);
-            String entity = EntityUtils.toString(response.getEntity());
-            game = parser.parse(entity).getAsJsonObject();
-            knightStats = game.getAsJsonObject("knight");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Request request = new Request.Builder()
+                .url("http://www.dragonsofmugloar.com/api/game")
+                .get()
+                .addHeader("Cache-Control", "no-cache")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        game = parser.parse(response.body().string()).getAsJsonObject();
+        knightStats = game.getAsJsonObject("knight");
         Dragon dragon = new Dragon(
                 knightStats.get("attack").getAsInt(),
                 knightStats.get("armor").getAsInt(),
                 knightStats.get("agility").getAsInt(),
-                knightStats.get("endurance").getAsInt(),
-                game.get("gameId").getAsInt());
-        String json = gson.toJson(dragon);
-        String response = "{\"dragon\": "+ json +"}";
-        System.out.println(response);
+                knightStats.get("endurance").getAsInt());
+        this.gameId = game.get("gameId").getAsInt();
         return dragon;
     }
+
+    public void putSolution(Dragon dragon) throws IOException {
+        MediaType mediaType = MediaType.parse("application/json");
+        RequestBody body = RequestBody.create(mediaType, dragon.toString());
+        Request request = new Request.Builder()
+                .url("http://www.dragonsofmugloar.com/api/game/"+gameId+"/solution")
+                .put(body)
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Cache-Control", "no-cache")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        System.out.println(response.body().string());
+    }
+
 }

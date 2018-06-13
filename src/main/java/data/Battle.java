@@ -1,11 +1,13 @@
 package data;
 
 import httpclient.HttpClient;
+
+import java.io.IOException;
 import java.util.Map;
 
 public class Battle {
 
-    public static Dragon normalWeather(HttpClient httpClient) {
+    public static Dragon normalWeather(HttpClient httpClient) throws IOException {
         Dragon dragon = httpClient.getDragon();
         Map<String, Integer> stats = dragon.getSortedStats();
         String bestStat = (String) stats.keySet().toArray()[0];

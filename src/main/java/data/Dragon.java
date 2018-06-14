@@ -18,11 +18,11 @@ public class Dragon {
                         (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 
-    public Map<String, Integer> getSortedStats() {
+    Map<String, Integer> getSortedStats() {
         return sortedStats;
     }
 
-    public void setSortedStats(Map<String, Integer> sortedStats) {
+    void setSortedStats(Map<String, Integer> sortedStats) {
         this.sortedStats = sortedStats;
     }
 

@@ -3,6 +3,7 @@ package data;
 import com.google.gson.JsonObject;
 import httpclient.HttpClient;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Map;
@@ -23,6 +24,7 @@ public class Battle {
         } else {
             this.lost++;
         }
+        System.out.println("------------------------------------");
         System.out.println(message);
         this.timesPlayed++;
         System.out.println("Wins: " + won + " Losses: " + lost + ". Total games played: " + timesPlayed +

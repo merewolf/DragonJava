@@ -11,11 +11,10 @@ public class Battle {
     private int won = 0;
     private int lost = 0;
     private int timesPlayed = 0;
-    private String status;
 
     public void getResults(HttpClient httpClient) throws IOException, SAXException, ParserConfigurationException {
         JsonObject result = httpClient.putSolution(doBattle(httpClient));
-        this.status = result.getAsJsonPrimitive("status").getAsString();
+        String status = result.getAsJsonPrimitive("status").getAsString();
         String message = result.getAsJsonPrimitive("message").getAsString();
         if (status.equals("Victory")) {
             this.won++;
@@ -46,7 +45,7 @@ public class Battle {
         return dragon;
     }
 
-    private void normalWeather(Dragon dragon) {
+    void normalWeather(Dragon dragon) {
         Map<String, Integer> stats = dragon.getSortedStats();
         String bestStat = (String) stats.keySet().toArray()[0];
         String secondBestStat = (String) stats.keySet().toArray()[1];
@@ -61,7 +60,7 @@ public class Battle {
         dragon.setSortedStats(stats);
     }
 
-    private void dryWeather(Dragon dragon) {
+    void dryWeather(Dragon dragon) {
         Map<String, Integer> stats = dragon.getSortedStats();
         stats.replace("scaleThickness", 5);
         stats.replace("clawSharpness", 5);
@@ -70,16 +69,12 @@ public class Battle {
         dragon.setSortedStats(stats);
     }
 
-    private void rainWeather(Dragon dragon) {
+    void rainWeather(Dragon dragon) {
         Map<String, Integer> stats = dragon.getSortedStats();
         stats.replace("scaleThickness", 5);
         stats.replace("clawSharpness", 10);
         stats.replace("wingStrength", 5);
         stats.replace("fireBreath", 0);
         dragon.setSortedStats(stats);
-    }
-
-    public String getStatus() {
-        return status;
     }
 }

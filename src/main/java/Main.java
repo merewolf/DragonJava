@@ -28,13 +28,15 @@ public class Main {
                         quit = true;
                         break;
                     default:
+                        System.out.println("Incorrect key pressed");
                         printMenu();
                         break;
                 }
             } catch (InputMismatchException e) {
+                System.out.println("Incorrect key pressed");
                 scanner.reset();
                 printMenu();
-                scanner.next();
+                scanner.nextLine();
             }
         }
     }

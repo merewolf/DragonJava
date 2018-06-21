@@ -3,17 +3,20 @@ package data;
 import com.google.gson.JsonObject;
 import httpclient.HttpClient;
 import org.xml.sax.SAXException;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Map;
 
 public class Battle {
+    private int gameId;
+    private double weatherRating;
     private int won = 0;
     private int lost = 0;
     private int timesPlayed = 0;
 
     public void getResults(HttpClient httpClient) throws IOException, SAXException, ParserConfigurationException {
-        JsonObject result = httpClient.putSolution(doBattle(httpClient));
+        JsonObject result = httpClient.putSolution(doBattle(setUpBattle(httpClient)), this.gameId);
         String status = result.getAsJsonPrimitive("status").getAsString();
         String message = result.getAsJsonPrimitive("message").getAsString();
         if (status.equals("Victory")) {
@@ -29,15 +32,25 @@ public class Battle {
         System.out.println("------------------------------------");
     }
 
-    private Dragon doBattle(HttpClient httpClient) throws ParserConfigurationException, SAXException, IOException {
-        Dragon dragon = httpClient.getDragon();
-        double weatherRating = httpClient.getWeatherRating();
-        if (weatherRating < 2) return dragon;
-        else if (weatherRating < 4) {
+    private JsonObject setUpBattle(HttpClient httpClient) throws ParserConfigurationException, SAXException, IOException {
+        JsonObject game = httpClient.getNewGame();
+        this.gameId = game.get("gameId").getAsInt();
+        this.weatherRating = httpClient.getWeather(gameId);
+        return game.getAsJsonObject("knight");
+    }
+
+    private Dragon doBattle(JsonObject knightStats) {
+        Dragon dragon = new Dragon(
+                knightStats.get("attack").getAsInt(),
+                knightStats.get("armor").getAsInt(),
+                knightStats.get("agility").getAsInt(),
+                knightStats.get("endurance").getAsInt());
+        if (this.weatherRating < 2) return dragon;
+        else if (this.weatherRating < 4) {
             dragon = null;
-        } else if (weatherRating < 7) {
+        } else if (this.weatherRating < 7) {
             dryWeather(dragon);
-        } else if (weatherRating < 10) {
+        } else if (this.weatherRating < 10) {
             normalWeather(dragon);
         } else {
             rainWeather(dragon);

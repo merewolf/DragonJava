@@ -16,7 +16,9 @@ public class Battle {
     private int timesPlayed = 0;
 
     public void getResults(HttpClient httpClient) throws IOException, SAXException, ParserConfigurationException {
-        JsonObject result = httpClient.putSolution(doBattle(setUpBattle(httpClient)), this.gameId);
+        JsonObject knight = setUpBattle(httpClient);
+        Dragon s = doBattle(knight);
+        JsonObject result = httpClient.putSolution(s, this.gameId);
         String status = result.getAsJsonPrimitive("status").getAsString();
         String message = result.getAsJsonPrimitive("message").getAsString();
         if (status.equals("Victory")) {

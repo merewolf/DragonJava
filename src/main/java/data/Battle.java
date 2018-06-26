@@ -3,7 +3,6 @@ package data;
 import com.google.gson.JsonObject;
 import httpclient.HttpClient;
 import org.xml.sax.SAXException;
-
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Map;
@@ -17,8 +16,8 @@ public class Battle {
 
     public void getResults(HttpClient httpClient) throws IOException, SAXException, ParserConfigurationException {
         JsonObject knight = setUpBattle(httpClient);
-        Dragon s = doBattle(knight);
-        JsonObject result = httpClient.putSolution(s, this.gameId);
+        Dragon dragon = createDragon(knight);
+        JsonObject result = httpClient.putSolution(dragon, this.gameId);
         String status = result.getAsJsonPrimitive("status").getAsString();
         String message = result.getAsJsonPrimitive("message").getAsString();
         if (status.equals("Victory")) {
@@ -41,7 +40,7 @@ public class Battle {
         return game.getAsJsonObject("knight");
     }
 
-    private Dragon doBattle(JsonObject knightStats) {
+    private Dragon createDragon(JsonObject knightStats) {
         Dragon dragon = new Dragon(
                 knightStats.get("attack").getAsInt(),
                 knightStats.get("armor").getAsInt(),
